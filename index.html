@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meshtastic H1 Interface</title>
+</head>
+<body>
+  <h1>Meshtastic Web Interface</h1>
+  <button id="connectBtn">Connect to Meshtastic</button><br><br>
+  <textarea id="log" rows="10" cols="50" readonly></textarea><br>
+  <input type="text" id="messageInput" placeholder="Type a message">
+  <button id="sendBtn">Send</button>
+
+  <script>
+    let port;
+    let writer;
+    let reader;
+
+    document.getElementById('connectBtn').addEventListener('click', async () => {
+      try {
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 921600 });
+
+        const textDecoder = new TextDecoderStream();
+        const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+        reader = textDecoder.readable.getReader();
+
+        const textEncoder = new TextEncoderStream();
+        const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
+        writer = textEncoder.writable.getWriter();
+
+        readLoop();
+      } catch (err) {
+        console.error('Connection failed: ', err);
+      }
+    });
+
+    async function readLoop() {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (value) {
+          document.getElementById('log').value += value;
+        }
+      }
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      const msg = document.getElementById('messageInput').value;
+      await writer.write(msg + "\n");
+    });
+  </script>
+</body>
+</html>
