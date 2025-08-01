@@ -1,0 +1,15 @@
+{
+  "name": "QR Code Maker",
+  "short_name": "QR Maker",
+  "start_url": "./?pawMode=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007aff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/833/833472.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
