@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Code Maker</title>
+  <title>QR Code Maker - PAW Mode</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ffffff">
   <style>
     body {
       margin: 0;
@@ -52,6 +55,7 @@
       cursor: pointer;
       transition: background 0.3s;
       width: 100%;
+      margin-bottom: 10px;
     }
 
     button:hover {
@@ -67,9 +71,24 @@
     }
 
     .footer {
-      margin-top: 25px;
+      margin-top: 20px;
       font-size: 12px;
       color: #666;
+    }
+
+    #installPrompt {
+      display: none;
+      margin-top: 10px;
+      background: #fffbdd;
+      color: #333;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .paw-mode {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #444;
     }
   </style>
 </head>
@@ -77,13 +96,32 @@
 
   <div class="container">
     <h2>📷 QR Code Maker</h2>
+    <div id="pawInfo" class="paw-mode"></div>
+
     <input type="text" id="qrInput" placeholder="Enter text or URL" />
     <button onclick="generateQR()">Generate QR Code</button>
+
     <div id="qrResult"></div>
-    <div class="footer">No data is stored. Works offline after load. 🔒</div>
+
+    <button onclick="showInstallPrompt()">📲 Add to Home Screen</button>
+    <div id="installPrompt">
+      Tap the <strong>Share</strong> icon in Safari and choose<br>
+      <strong>“Add to Home Screen”</strong>.
+    </div>
+
+    <div class="footer">Offline-ready. PAW supported. 🐾</div>
   </div>
 
   <script>
+    // PAW mode check
+    const pawInfo = document.getElementById('pawInfo');
+    const urlParams = new URLSearchParams(window.location.search);
+    const pawMode = urlParams.get("pawMode") === "true";
+    if (pawMode) {
+      pawInfo.textContent = "🐾 PAW MODE ENABLED";
+      document.body.style.background = "#fef6e4";
+    }
+
     function generateQR() {
       const input = document.getElementById("qrInput").value.trim();
       const result = document.getElementById("qrResult");
@@ -97,6 +135,15 @@
       const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
 
       result.innerHTML = `<img src="${qrURL}" alt="QR Code">`;
+    }
+
+    function showInstallPrompt() {
+      document.getElementById("installPrompt").style.display = "block";
+    }
+
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
     }
   </script>
 
