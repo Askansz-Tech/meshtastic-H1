@@ -20,11 +20,11 @@
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
       border-radius: 20px;
       padding: 25px;
-      max-width: 350px;
+      max-width: 380px;
       width: 100%;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       text-align: center;
@@ -37,7 +37,7 @@
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border: none;
       border-radius: 10px;
       font-size: 16px;
@@ -53,9 +53,9 @@
       color: white;
       border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s;
       width: 100%;
       margin-bottom: 10px;
+      transition: background 0.3s;
     }
 
     button:hover {
@@ -79,10 +79,11 @@
     #installPrompt {
       display: none;
       margin-top: 10px;
-      background: #fffbdd;
+      background: #fff3cd;
       color: #333;
       padding: 10px;
       border-radius: 10px;
+      font-size: 14px;
     }
 
     .paw-mode {
@@ -103,20 +104,23 @@
 
     <div id="qrResult"></div>
 
-    <button onclick="showInstallPrompt()">📲 Add to Home Screen</button>
-    <div id="installPrompt">
-      Tap the <strong>Share</strong> icon in Safari and choose<br>
-      <strong>“Add to Home Screen”</strong>.
+    <div id="installSection">
+      <button onclick="showInstallPrompt()">📲 Add to Home Screen</button>
+      <div id="installPrompt">
+        Tap the <strong>Share</strong> icon in Safari and choose<br>
+        <strong>“Add to Home Screen”</strong>.
+      </div>
     </div>
 
     <div class="footer">Offline-ready. PAW supported. 🐾</div>
   </div>
 
   <script>
-    // PAW mode check
     const pawInfo = document.getElementById('pawInfo');
     const urlParams = new URLSearchParams(window.location.search);
     const pawMode = urlParams.get("pawMode") === "true";
+    const installSection = document.getElementById("installSection");
+
     if (pawMode) {
       pawInfo.textContent = "🐾 PAW MODE ENABLED";
       document.body.style.background = "#fef6e4";
@@ -133,12 +137,16 @@
 
       const encoded = encodeURIComponent(input);
       const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encoded}`;
-
       result.innerHTML = `<img src="${qrURL}" alt="QR Code">`;
     }
 
     function showInstallPrompt() {
       document.getElementById("installPrompt").style.display = "block";
+    }
+
+    // Hide install UI if app is running in standalone mode
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      installSection.style.display = 'none';
     }
 
     // Register service worker
