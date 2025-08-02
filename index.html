@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../icons/qr-icon-512.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="../icons/qr-icon-512.png" alt="Paw QR Icon" class="logo">
+            <h1>QR Code Generator</h1>
+            <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+        </header>
+        <main>
+            <form id="qr-form">
+                <label for="type">Type:</label>
+                <select id="type" name="type">
+                    <option value="url">URL</option>
+                    <option value="text">Text</option>
+                    <option value="wifi">WiFi</option>
+                    <option value="contact">Contact</option>
+                </select>
+                <div id="input-fields">
+                    <!-- Dynamic fields will be inserted here -->
+                </div>
+                <button type="submit">Generate QR Code</button>
+            </form>
+            <section class="qr-preview">
+                <h2>Preview</h2>
+                <div id="qrcode"></div>
+                <div class="actions">
+                    <button id="download-btn">Download</button>
+                    <button id="share-btn">Share</button>
+                    <button id="copy-btn">Copy</button>
+                </div>
+            </section>
+            <section class="qr-history">
+                <h2>History</h2>
+                <ul id="history-list"></ul>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; Pixel Heven 2025</p>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
